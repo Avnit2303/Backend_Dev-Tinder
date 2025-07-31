@@ -43,13 +43,14 @@ app.patch("/userupdate", async (req, res) => {
     const data = req.body;
     try {
         console.log(data);
-        const update = await users.findByIdAndUpdate( userid , data);
+        const update = await users.findByIdAndUpdate( userid , data , {runValidators:true});
         res.send("updated");
     }
     catch (err) {
         res.status(400).send("not updated"+err.message)
     }
 })
+
 ConnectDB().then(() => {
     console.log("Database connected");
     app.listen(3000, () => {
