@@ -2,63 +2,19 @@ const express = require("express");
 const app = express();
 const { ConnectDB } = require("./confing/database");
 const users = require("./models/user");
-const { validatesignupdata } = require("./utils/signupvalidation.js")
-const bcrypt = require("bcrypt")
+const cookieParser = require("cookie-parser")
+const cors = require("cors");
+const authrouter = require("./routers/auth.js")
+const profileRouter = require("./routers/profile.js")
+const requestsRouter = require("./routers/request.js")
 
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors())
+app.use("/",authrouter);
+app.use("/",profileRouter);
+app.use("/",requestsRouter);
 
-app.use(express.json())
-
-
-
-app.post("/signup", async (req, res) => {
-    try {
-        //check validation
-        validatesignupdata(req)
-
-        const { firstname, lastname, email, password } = req.body;
-        //encrypt password
-        const passwordhash = await bcrypt.hash(password, 10);
-        console.log(passwordhash);
-
-        const user = users(
-            {
-                firstname,
-                lastname,
-                email,
-                password: passwordhash
-            }
-        );
-        await user.save();
-        res.send("sucesfully");
-    }
-    catch (err) {
-        res.status(400).send("ERROR" + " " + err.message)
-    }
-})
-
-app.get("/user", async (req, res) => {
-    try {
-        // const emailid = req.body.email;
-        const userone = await users.find({})
-        // console.log(userone);
-        res.send(userone)
-    }
-    catch (err) {
-        res.status(400).send("not find user", err.message)
-    }
-
-})
-
-app.delete("/userdelete", async (req, res) => {
-    try {
-        const userid = req.body.userid;
-        const userdel = await users.findOneAndDelete(userid)
-        res.send("user deleted");
-    }
-    catch (err) {
-        res.status(400).send(err.message)
-    }
-})
 
 app.patch("/userupdate/:userid", async (req, res) => {
     const userid = req.params.userid;

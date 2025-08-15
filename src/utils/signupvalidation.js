@@ -13,4 +13,11 @@ const validatesignupdata = (req) => {
     }
 }
 
-module.exports = { validatesignupdata }
+
+const validatedata = (req) =>{
+    const allowedfileds = ["firstname","lastname","skill","about","gender"]
+    const isvaliddata = Object.keys(req.body).every(filed => allowedfileds.includes(filed))
+    return isvaliddata
+}
+
+module.exports = { validatesignupdata,validatedata }
