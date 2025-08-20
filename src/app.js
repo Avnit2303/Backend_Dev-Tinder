@@ -6,14 +6,16 @@ const cookieParser = require("cookie-parser")
 const cors = require("cors");
 const authrouter = require("./routers/auth.js")
 const profileRouter = require("./routers/profile.js")
-const requestsRouter = require("./routers/request.js")
+const requestsRouter = require("./routers/request.js");
+const userRouter = require("./routers/user.js");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors())
+app.use(cors());
 app.use("/",authrouter);
 app.use("/",profileRouter);
 app.use("/",requestsRouter);
+app.use("/",userRouter)
 
 
 app.patch("/userupdate/:userid", async (req, res) => {

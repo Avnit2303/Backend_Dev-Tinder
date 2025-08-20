@@ -2,12 +2,11 @@ const express = require("express");
 const { validatesignupdata } = require("../utils/signupvalidation");
 const bcrypt = require("bcrypt")
 const users = require("../models/user");
-const { now } = require("mongoose");
 const authrouter = express.Router()
 
 authrouter.post("/signup", async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         
         //check validation
         // validatesignupdata(req)
@@ -15,7 +14,7 @@ authrouter.post("/signup", async (req, res) => {
         const { fName, lName, email, password } = req.body;
         //encrypt password
         const passwordhash = await bcrypt.hash(password, 10);
-        console.log(passwordhash);
+        // console.log(passwordhash);
 
         const user = users(
             {
@@ -33,31 +32,33 @@ authrouter.post("/signup", async (req, res) => {
     }
 })
 
-authrouter.get("/login", async (req, res) => {
+authrouter.post("/login", async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        //  console.log(email);
+         console.log(email);
 
         const user = await users.findOne({ email: email })
         if (!user) {
-            throw new Error("invalid email id")
+          return  res.json({message:"invalid email id"})
         }
         const passwords = await user.validatepassword(password)
+        if (!password) {
+          return  res.json({message:"invalid password"})
+        }
         console.log(passwords);
 
         if (passwords) {
-
             const token = await user.getJWT()
             res.cookie("token", token);
-            res.send("successfullyyy")
+            res.status(200).json({message:"succesfully"})
         }
         else {
             res.send("invalid password")
         }
     }
     catch (err) {
-        res.send("ERROR:-" + err);
+        res.status(400).json({message: err});
     }
 })
 

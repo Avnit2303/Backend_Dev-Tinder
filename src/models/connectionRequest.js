@@ -3,13 +3,15 @@ const mongoose = require("mongoose")
 const connectionRequestSchema = new mongoose.Schema({
     fromuserid: {
         type: mongoose.Schema.Types.ObjectId,
-        require: true
+        require: true,
+        ref:"User"
     },
     touserid: {
         type: mongoose.Schema.Types.ObjectId,
-        require: true
+        require: true,
+        ref:"User"
     },
-    Status: {
+    status: {
         type: String,
         require: true,
         enum: {
@@ -28,6 +30,7 @@ connectionRequestSchema.pre("save", function (next) {
     if (ConnectionRequestModel.fromuserid.equals(ConnectionRequestModel.touserid)) {
         throw new Error("Cannot send connection req your self")
     }
+    next()
 })
 
 const ConnectionRequestModel = new mongoose.model("ConnectionRequest", connectionRequestSchema);
