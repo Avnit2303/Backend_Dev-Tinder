@@ -13,6 +13,15 @@ authrouter.post("/signup", async (req, res) => {
 
         const { fName, lName, email, password } = req.body;
         //encrypt password
+        console.log(fName,lName,email,password);
+
+        const checkemail = await users.findOne({email:email})
+        console.log(checkemail);
+        
+        if(checkemail){
+             res.status(401).json({message:"email id already exist"})
+        }
+        
         const passwordhash = await bcrypt.hash(password, 10);
         // console.log(passwordhash);
 
@@ -25,10 +34,10 @@ authrouter.post("/signup", async (req, res) => {
             }
         );
         await user.save();
-        res.status(200).send("sucesfully");
+        res.status(200).json({message:"successfully"});
     }
     catch (err) {
-        res.status(400).send("ERROR" + " " + err.message)
+        res.status(400).json({Error:err})
     }
 })
 
@@ -40,7 +49,7 @@ authrouter.post("/login", async (req, res) => {
 
         const user = await users.findOne({ email: email })
         if (!user) {
-          return  res.json({message:"invalid email id"})
+          return  res.status(401).json({message:"invalid email id"})
         }
         const passwords = await user.validatepassword(password)
         if (!password) {
@@ -54,7 +63,7 @@ authrouter.post("/login", async (req, res) => {
             res.status(200).json({message:"succesfully"})
         }
         else {
-            res.send("invalid password")
+            return res.status(401).json({message:"invalid password"})
         }
     }
     catch (err) {
@@ -70,3 +79,12 @@ authrouter.get("/logout", async (req,res) =>{
 })
 
 module.exports = authrouter;
+
+
+
+
+
+
+
+
+
