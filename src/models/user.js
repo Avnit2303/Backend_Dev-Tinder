@@ -1,61 +1,68 @@
 const monggose = require("mongoose");
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const validator = require("validator");
 
-
-
-const userschema = new monggose.Schema({
+const userschema = new monggose.Schema(
+  {
     firstname: {
-        type: String,
-        required: true,
-        maxLength: 15
+      type: String,
+      required: true,
+      maxLength: 15,
     },
     lastname: {
-        type: String,
-        default: "Avnit",
+      type: String,
+      default: "Avnit",
     },
     email: {
-        type: String,
-        unique: true,
-        trim: true,
-        required: true,
-        lowercase: true,
+      type: String,
+      unique: true,
+      trim: true,
+      required: true,
+      lowercase: true,
     },
     password: {
-        type: String
+      type: String,
+    },
+    imageUrl: {
+      type: String,
+      default:
+        "https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg",
+    },
+    age: {
+      type: Number,
     },
     gender: {
-        type: String,
-        validator(value) {
-            if (!["male", "female", "other"].includes(value)) {
-                throw new Error("Gender is not valid")
-            }
-        },
+      type: String,
+      validator(value) {
+        if (!["male", "female", "other"].includes(value)) {
+          throw new Error("Gender is not valid");
+        }
+      },
     },
     skill: {
-        type: [String]
+      type: [String],
     },
     about: {
-        type: String
+      type: String,
     },
-},
-    {
-        timestamps: true,
-    }
+  },
+  {
+    timestamps: true,
+  }
 );
 
 userschema.methods.getJWT = async function () {
-    const user = this;
-    const token = await jwt.sign({ _id: user._id }, "avnit@gmail.com")
-    return token;
-}
+  const user = this;
+  const token = await jwt.sign({ _id: user._id }, "avnit@gmail.com");
+  return token;
+};
 
 userschema.methods.validatepassword = async function (inputbyuserpass) {
-    const user = this;
-    const passwordhash = user.password
-    const isvalidpass = await bcrypt.compare(inputbyuserpass, passwordhash);
-    return isvalidpass
-}
+  const user = this;
+  const passwordhash = user.password;
+  const isvalidpass = await bcrypt.compare(inputbyuserpass, passwordhash);
+  return isvalidpass;
+};
 
 module.exports = monggose.model("User", userschema);

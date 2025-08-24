@@ -15,7 +15,7 @@ const validatesignupdata = (req) => {
 
 
 const validatedata = (req) =>{
-    const allowedfileds = ["firstname","lastname","skill","about","gender"]
+    const allowedfileds = ["firstname","lastname","skill","about","gender","imageUrl","age"]
     const isvaliddata = Object.keys(req.body).every(filed => allowedfileds.includes(filed))
     return isvaliddata
 }
