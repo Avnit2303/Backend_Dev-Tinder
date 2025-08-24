@@ -60,7 +60,7 @@ authrouter.post("/login", async (req, res) => {
         if (passwords) {
             const token = await user.getJWT()
             res.cookie("token", token);
-            res.status(200).json({message:"succesfully"})
+            res.status(200).json({message:"succesfully",user:user})
         }
         else {
             return res.status(401).json({message:"invalid password"})
@@ -79,12 +79,4 @@ authrouter.get("/logout", async (req,res) =>{
 })
 
 module.exports = authrouter;
-
-
-
-
-
-
-
-
 

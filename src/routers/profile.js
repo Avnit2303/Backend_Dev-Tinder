@@ -5,13 +5,11 @@ const { validatedata } = require("../utils/signupvalidation")
 
 profileRouter.get("/profile/view", userauth, async (req, res) => {
     try {
-        const user = req.user
-        res.send(user)
-    }
-    catch (error) {
-        console.log(error);
-
-    }
+    const user = req.user;
+    res.status(200).json({ message: "user verify", data: user });
+  } catch (error) {
+    res.status(401).json({ message: "Unauthorized user" });
+  }
 });
 
 
