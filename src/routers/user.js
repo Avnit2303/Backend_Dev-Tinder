@@ -7,12 +7,15 @@ const userRouter = express.Router();
 const USER_DATA = "firstname lastname skill about gender age imageUrl"
 
 userRouter.get("/user/request/receiver", userauth, async (req, res) => {
-    try {
+    try {        
         const loggeduser = req.user;
+        console.log(loggeduser);
+        
         const checkcoonection = await ConnectionRequestModel.find({
             touserid: loggeduser._id,
             status: "interested",
-        }).populate("fromuserid" + USER_DATA)
+        }).populate("fromuserid", USER_DATA)
+        
         res.json({
             message: "data feched succesfully",
             data: checkcoonection
