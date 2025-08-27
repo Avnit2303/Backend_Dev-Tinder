@@ -2,6 +2,7 @@ const express = require("express");
 const userauth = require("../middlewares/auth");
 const ConnectionRequestModel = require("../models/connectionRequest");
 const user = require("../models/user");
+const { connections } = require("mongoose");
 const userRouter = express.Router();
 
 const USER_DATA = "firstname lastname skill about gender age imageUrl"
@@ -34,7 +35,7 @@ userRouter.get("/user/connection", userauth, async (req, res) => {
                 { touserid: loggeduser._id, status: "accepeted" },
                 { fromuserid: loggeduser._id, status: "accepeted" }
             ]
-        }).populate("fromuserid" + USER_DATA).populate("touserid" + USER_DATA)
+        }).populate("fromuserid" , USER_DATA).populate("touserid" , USER_DATA)
         console.log(checkconnection);
 
         const data = checkconnection.map((row) => {
@@ -45,7 +46,7 @@ userRouter.get("/user/connection", userauth, async (req, res) => {
                 return row.fromuserid;
             }
         })
-        res.json({ data })
+        res.status(200).json({ data })
     }
     catch (error) {
         res.status(400).send("ERROR" + error)
