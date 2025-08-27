@@ -34,7 +34,7 @@ userRouter.get("/user/connection", userauth, async (req, res) => {
                 { touserid: loggeduser._id, status: "accepeted" },
                 { fromuserid: loggeduser._id, status: "accepeted" }
             ]
-        }).populate("fromuserid" + USER_DATA).populate("touserid" + USER_DATA)
+        }).populate("fromuserid", USER_DATA).populate("touserid" , USER_DATA)
         console.log(checkconnection);
 
         const data = checkconnection.map((row) => {

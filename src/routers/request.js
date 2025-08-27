@@ -63,6 +63,8 @@ requestsRouter.post("/request/review/:status/:reqid", userauth, async (req, res)
         const loggeduser = req.user;
         const { status, reqid } = req.params;
         console.log(reqid);
+        console.log(loggeduser);
+        
 
         const allowedstatus = ["accepeted", "rejected"]
         if (!allowedstatus.includes(status)) {
