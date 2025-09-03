@@ -8,45 +8,30 @@ const authrouter = require("./routers/auth.js")
 const profileRouter = require("./routers/profile.js")
 const requestsRouter = require("./routers/request.js");
 const userRouter = require("./routers/user.js");
+const http = require("http");
+const initialzesocket = require("./utils/socket.js");
+const chatRouter = require("./routers/chat.js");
 
 
 app.use(cors({
-    origin:"http://localhost:5173",
-    credentials:true,
+    origin: "http://localhost:5173",
+    credentials: true,
 })
 );
 app.use(express.json());
 app.use(cookieParser());
-app.use("/",authrouter);
-app.use("/",profileRouter);
-app.use("/",requestsRouter);
-app.use("/",userRouter)
+app.use("/", authrouter);
+app.use("/", profileRouter);
+app.use("/", requestsRouter);
+app.use("/", userRouter)
+app.use("/",chatRouter)
 
-
-app.patch("/userupdate/:userid", async (req, res) => {
-    const userid = req.params.userid;
-    const data = req.body;
-    try {
-        const validatefield = ["firstname", "lastname", "skill", "password", "gender"];
-        const validateupdatefiled = Object.keys(data).every((k) => validatefield.includes(k));
-        if (!validateupdatefiled) {
-            throw new Error("you are not update the field")
-        }
-        if (data?.skill.length > 10) {
-            throw new Error("skill not must be 10")
-        }
-        console.log(data);
-        const update = await users.findByIdAndUpdate(userid, data, { runValidators: true });
-        res.send("updated");
-    }
-    catch (err) {
-        res.status(400).send("not updated" + err.message)
-    }
-})
+const server = http.createServer(app);
+initialzesocket(server)
 
 ConnectDB().then(() => {
     console.log("Database connected");
-    app.listen(3000, () => {
+    server.listen(3000, () => {
         console.log("server is successfully listen on port 3000");
 
     })
